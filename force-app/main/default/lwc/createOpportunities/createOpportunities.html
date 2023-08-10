@@ -1,0 +1,52 @@
+<template>
+    <lightning-card title="Create opportunities">
+        <div class="slds-var-p-around_medium">
+            
+            <div class="slds-p-bottom_medium">
+                <lightning-input type="number" label="Enter amount of opportunities to create:" onchange={handleInputChange}></lightning-input>
+            </div>
+
+            <div class="slds-p-bottom_medium">
+                <lightning-input type="text" label="Enter opportunity name:" onchange={handleInputChange2}></lightning-input>
+            </div>
+
+            <div class="slds-p-bottom_medium">
+                <lightning-combobox
+                    label="Select stage name:"
+                    placeholder="Select stage"
+                    options={stages}
+                    onchange={handleStageName}>
+                </lightning-combobox>
+            </div>
+
+            <div class="slds-p-bottom_medium">
+                <lightning-input type="date" label="Select close date:" onchange={handleCloseDate}></lightning-input>
+            </div>
+
+            <div class="slds-p-bottom_medium">
+                <lightning-input type="text" label="Enter tracking number:" onchange={handleInputChange5}></lightning-input>
+            </div>
+
+            <div class="slds-p-bottom_medium">
+                <lightning-input type="text" label="Enter order number" onchange={handleInputChange6}></lightning-input>
+            </div>
+            
+            <lightning-button 
+                variant="brand" 
+                label="Create opportunities"
+                title="Primary action" 
+                onclick={handleClick}>
+            </lightning-button>
+        </div>
+        <template lwc:if={opportunities}>
+            <div class="slds-var-p-around_medium">
+    
+                <lightning-datatable
+                        key-field="id"
+                        data={opportunities}
+                        columns={columns}>
+                </lightning-datatable>
+            </div>
+        </template>
+    </lightning-card>
+</template>

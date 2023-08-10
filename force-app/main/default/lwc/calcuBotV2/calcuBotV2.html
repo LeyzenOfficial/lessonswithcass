@@ -1,0 +1,35 @@
+<template>
+    <lightning-card title="CalcuBot V2">
+        <div class="slds-var-p-around_medium">
+            <lightning-combobox
+                name="progress"
+                label="Status"
+                value={operation}
+                placeholder="Select Operation"
+                options={options}
+                onchange={handleOperationChange} ></lightning-combobox>
+            
+        </div>
+
+        <div class="slds-var-p-around_medium">
+            <lightning-input type="text" label="Value 1:" onchange={handleInputChange}></lightning-input>
+        </div>
+
+        <div class="slds-var-p-around_medium">
+            <lightning-input type="text" label="Value 2:" onchange={handleInputChange2}></lightning-input>
+        </div>
+
+        <div class="slds-var-p-around_medium">
+            <lightning-button 
+                variant="brand" 
+                label="Calculate"
+                title="Primary action" 
+                onclick={handleClick}>
+            </lightning-button>
+        </div>
+
+        <div class="slds-var-p-around_medium">
+            <p>Result: {result}</p>
+        </div>
+    </lightning-card>
+</template>

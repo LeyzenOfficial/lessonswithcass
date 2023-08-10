@@ -1,0 +1,25 @@
+<template>
+    <lightning-card title="Click the button for a funny joke! (Most of them are cringe)">
+        <div class="slds-var-p-around_medium">
+
+            <lightning-button 
+                variant="brand" 
+                label="Get Joke"
+                title="Primary action" 
+                onclick={getJoke}>
+            </lightning-button>
+
+            <template lwc:if={joke}>
+                <div class="slds-var-p-top_medium">
+                    
+                    <p>{joke.category}</p>
+                    <p>{joke.setup}</p>
+                    <p>{joke.delivery}</p>
+                    <p>{joke.jokeMessage}</p>
+                </div>
+            </template>
+
+
+        </div>
+    </lightning-card>
+</template>

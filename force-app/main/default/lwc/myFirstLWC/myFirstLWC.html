@@ -1,0 +1,47 @@
+<template>
+    <lightning-card title="To do list">
+        <div class="slds-p-around_medium">
+            <p>{message}</p>
+
+            <template for:each={stuffToDo} for:item="stuff">
+                <li key={stuff}>
+                    {stuff}
+                </li>
+            </template>
+
+            <p>{stuffToDo}</p>
+            <p>About me:</p>
+            <p>Job: {aboutMe.job}</p>
+            <p>Hobby: {aboutMe.hobby}</p>
+            <p>Goal: {aboutMe.goal}</p>
+
+            <p>About My Friends</p>
+            <template for:each={friends} for:item="friend">
+                <li key={friend.id}>
+                    Name: {friend.name}, Job: {friend.job}, hobby: {friend.hobby}
+                </li>
+            </template>
+
+        </div>
+        <lightning-button 
+            variant="brand" 
+            label={inputValue} 
+            title="Primary action" 
+            onclick={handleClick} 
+            class="slds-m-left_x-small">
+        </lightning-button>
+
+        <lightning-button 
+            variant="brand" 
+            label="Delete"
+            title="Primary action" 
+            onclick={handleClick2} 
+            class="slds-m-left_x-small">
+        </lightning-button>
+        
+        <div class="slds-p-around_medium lgc-bg">
+            <lightning-input type="text" label="Enter some text" onchange={handleInputChange}></lightning-input>
+        </div>
+
+    </lightning-card>
+</template>

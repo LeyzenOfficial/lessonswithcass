@@ -1,0 +1,27 @@
+<template>
+    <lightning-card title="Mass account creator">
+        <div class="slds-var-p-around_medium">
+            
+            <div class="slds-p-bottom_medium">
+                <lightning-input type="number" label="Enter amount of accounts to create!" onchange={handleInputChange}></lightning-input>
+            </div>
+            
+            <lightning-button 
+                variant="brand" 
+                label="Create accounts"
+                title="Primary action" 
+                onclick={handleClick}>
+            </lightning-button>
+        </div>
+        <template lwc:if={accounts}>
+            <div class="slds-var-p-around_medium">
+    
+                <lightning-datatable
+                        key-field="id"
+                        data={accounts}
+                        columns={columns}>
+                </lightning-datatable>
+            </div>
+        </template>
+    </lightning-card>
+</template>

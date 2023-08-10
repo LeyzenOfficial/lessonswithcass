@@ -1,0 +1,120 @@
+<template>
+    <lightning-card title="Object Grabbers">
+    <div class="slds-var-p-around_medium">
+        
+        <div class="slds-p-bottom_medium">
+            <lightning-input type="number" label="Enter amount of accounts" onchange={handleInputChange}></lightning-input>
+        </div>
+        
+        <lightning-button 
+            variant="brand" 
+            label="Grab Account"
+            title="Primary action" 
+            onclick={getAccount}>
+        </lightning-button>
+    </div>
+    <template lwc:if={accounts}>
+        <div class="slds-var-p-around_medium">
+
+            <lightning-datatable
+                    key-field="id"
+                    data={accounts}
+                    columns={columns}>
+            </lightning-datatable>
+        </div>
+    </template>
+
+        <div class="slds-var-p-around_medium">
+            <lightning-input type="number" label="Enter amount of contacts" onchange={handleInputChange2}></lightning-input>
+        </div>
+
+    <div class="slds-var-p-around_medium">
+        <lightning-button 
+            variant="brand" 
+            label="Grab Contact"
+            title="Primary action" 
+            onclick={getContact}>
+        </lightning-button>
+    </div>
+    <template lwc:if={contacts}>
+
+        <div class="slds-var-p-around_medium">
+            <lightning-datatable
+                    key-field="id"
+                    data={contacts}
+                    columns={columns}>
+            </lightning-datatable>
+        </div>
+    </template>
+
+        <div class="slds-var-p-around_medium">
+            <lightning-input type="number" label="Enter amount of opportunities" onchange={handleInputChange3}></lightning-input>
+        </div>
+
+    <div class="slds-var-p-around_medium">
+        <lightning-button 
+            variant="brand" 
+            label="Grab Opportunity"
+            title="Primary action" 
+            onclick={getOpportunity}>
+        </lightning-button>
+    </div>
+    <template lwc:if={opportunities}>
+
+        <div class="slds-var-p-around_medium">
+            <lightning-datatable
+                    key-field="id"
+                    data={opportunities}
+                    columns={columns}>
+            </lightning-datatable>
+        </div>
+    </template>
+
+        <div class="slds-var-p-around_medium">
+            <lightning-input type="number" label="Enter amount if tasks" onchange={handleInputChange4}></lightning-input>
+        </div>
+
+    <div class="slds-var-p-around_medium">
+        <lightning-button 
+            variant="brand" 
+            label="Grab Task"
+            title="Primary action" 
+            onclick={getTask}>
+        </lightning-button>
+    </div>
+    <template lwc:if={tasks}>
+
+        <div class="slds-var-p-around_medium">
+            <lightning-datatable
+                    key-field="id"
+                    data={tasks}
+                    columns={columns}>
+            </lightning-datatable>
+        </div>
+    </template>
+
+    <div class="slds-var-p-around_medium">
+        <lightning-input type="number" label="Enter amount of custom testers" onchange={handleInputChange5}></lightning-input>
+    </div>
+
+    <div class="slds-var-p-around_medium">
+        <lightning-button 
+            variant="brand" 
+            label="Grab Custom Tester"
+            title="Primary action" 
+            onclick={getCustomTester}>
+        </lightning-button>
+    </div>
+    <template lwc:if={customTesters}>
+
+        <div class="slds-var-p-around_medium">
+            <lightning-datatable
+                    key-field="id"
+                    data={customTesters}
+                    columns={columns}>
+            </lightning-datatable>
+        </div>
+    </template>
+</lightning-card>
+</template>
+
