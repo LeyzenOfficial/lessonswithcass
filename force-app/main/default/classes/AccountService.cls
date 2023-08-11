@@ -179,6 +179,7 @@ public class AccountService {
 
             insert accountList;
             return accountList;
+            
 
         } catch (Exception e){
             throw new AuraHandledException(e.getMessage());
