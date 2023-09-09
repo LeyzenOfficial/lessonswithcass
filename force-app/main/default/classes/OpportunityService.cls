@@ -53,7 +53,7 @@ public class OpportunityService {
     @AuraEnabled
     public static List<Opportunity> opportunityGrabber(Integer i){
 
-        return [SELECT Id, Name FROM Opportunity LIMIT :i];
+        return [SELECT Id, Name, StageName, CloseDate FROM Opportunity LIMIT :i];
     }
 
     @AuraEnabled
