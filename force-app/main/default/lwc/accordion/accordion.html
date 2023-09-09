@@ -1,0 +1,85 @@
+<template>
+    <lightning-card title = Accordion>
+        <div class="slds-var-p-around_medium">
+            <lightning-accordion>
+                <lightning-accordion-section name="A" label="Case grabber">
+
+                    <div class="slds-p-bottom_medium">
+                        <lightning-input type="number" label="Enter amount of cases" onchange={handleInputChangeCases}></lightning-input>
+                    </div>
+
+                    <lightning-button 
+                        variant="brand" 
+                        label="Grab Cases"
+                        title="Primary action" 
+                        onclick={getCase}>
+                    </lightning-button>
+
+                    <template lwc:if={cases}>
+                        <div class="slds-var-p-around_medium">
+                
+                            <lightning-datatable
+                                    key-field="id"
+                                    data={cases}
+                                    columns={caseColumns}>
+                            </lightning-datatable>
+                        </div>
+                    </template>
+
+                </lightning-accordion-section>
+
+                <lightning-accordion-section name="B" label="Opportunity grabber">
+                    
+                    <div class="slds-p-bottom_medium">
+                        <lightning-input type="number" label="Enter amount of opportunities" onchange={handleInputChangeOpportunities}></lightning-input>
+                    </div>
+
+                    <lightning-button 
+                        variant="brand" 
+                        label="Grab Opportunities"
+                        title="Primary action" 
+                        onclick={getOpportunities}>
+                    </lightning-button>
+
+                    <template lwc:if={opportunities}>
+                        <div class="slds-var-p-around_medium">
+                
+                            <lightning-datatable
+                                    key-field="id"
+                                    data={opportunities}
+                                    columns={opportunityColumns}>
+                            </lightning-datatable>
+                        </div>
+                    </template>
+
+                </lightning-accordion-section>
+
+                <lightning-accordion-section name="C" label="Task grabber">
+                    
+                    <div class="slds-p-bottom_medium">
+                        <lightning-input type="number" label="Enter amount of tasks" onchange={handleInputChangeTasks}></lightning-input>
+                    </div>
+
+                    <lightning-button 
+                        variant="brand" 
+                        label="Grab Tasks"
+                        title="Primary action" 
+                        onclick={getTask}>
+                    </lightning-button>
+
+                    <template lwc:if={tasks}>
+                        <div class="slds-var-p-around_medium">
+                
+                            <lightning-datatable
+                                    key-field="id"
+                                    data={tasks}
+                                    columns={taskColumns}>
+                            </lightning-datatable>
+                        </div>
+                    </template>
+
+                </lightning-accordion-section>
+            </lightning-accordion>
+        </div>
+    </lightning-card>
+</template>
