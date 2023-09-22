@@ -1,0 +1,17 @@
+<template>
+    <lightning-card title="Create a contact">
+
+        <div class="slds-var-p-around_medium">
+            <lightning-input type="text" label="Enter contact name:" onchange={handleInputChange}></lightning-input>
+        </div>
+
+        <div class="slds-var-p-around_medium">
+            <lightning-button 
+                variant="brand" 
+                label="Create contact"
+                title="Primary action" 
+                onclick={handleClick}>
+            </lightning-button>
+        </div>
+    </lightning-card>
+</template>
