@@ -55,4 +55,23 @@ private class ContactServiceTest {
 
     }
 
+    @IsTest
+    private static void createContactTest(){
+
+        Account newAcc = new Account();
+        newAcc.Name = 'lol';
+        
+        insert newAcc;
+
+        String contactName = 'Test contact';
+        String accId = newAcc.Id;
+        Test.startTest();
+        ContactService.createContact(contactName, accId);
+        Test.stopTest();
+
+        List<Contact> conList = [SELECT Id, Name FROM Contact];
+
+        System.assertEquals(false, conList.isEmpty(), 'Contact list should not be empty!');
+    }
+
 }

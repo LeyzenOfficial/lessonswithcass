@@ -24,6 +24,12 @@
         </div>
     </template>
 
+    <template lwc:if={showSpinner}>
+        <div class="exampleHolder">
+            <lightning-spinner alternative-text="Loading" size="medium"></lightning-spinner>
+        </div>
+    </template>
+
         <div class="slds-var-p-around_medium">
             <lightning-input type="number" label="Enter amount of contacts" onchange={handleInputChange2}></lightning-input>
         </div>

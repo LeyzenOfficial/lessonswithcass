@@ -8,6 +8,8 @@ import customTesterGrabber from '@salesforce/apex/CustomTesterService.customTest
 //Toast import
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 
+import { NavigationMixin } from 'lightning/navigation';
+
 const columns = [
     { label: 'Account Name', fieldName: 'nameUrl', type: 'url', typeAttributes: {label: { fieldName: 'Name' }, target: '_blank'},},
     { label: 'Website', fieldName: 'Website'},
@@ -16,7 +18,7 @@ const columns = [
     
 ];
 
-export default class AccountGrabber extends LightningElement {
+export default class AccountGrabber extends NavigationMixin(LightningElement) {
 
     //DataTable
     columns = columns;
@@ -27,6 +29,10 @@ export default class AccountGrabber extends LightningElement {
     opportunities;
     tasks;
     customTesters;
+
+    //Boolean
+
+    showSpinner = false;
 
     //Record Values
     inputValue;
@@ -46,32 +52,35 @@ export default class AccountGrabber extends LightningElement {
             });
             this.dispatchEvent(evt);
         }else{
-            
-        accGrabber({i : this.inputValue})
-            .then(result => {
-                let nameUrl;
-                this.accounts = result.map(row => { 
-                    nameUrl = `/${row.Id}`;
-                    return {...row , nameUrl} 
+            this.showSpinner = true; 
+            accGrabber({i : this.inputValue})
+                .then(result => {
+                    let nameUrl;
+                    this.accounts = result.map(row => { 
+                        nameUrl = `/${row.Id}`;
+                        return {...row , nameUrl} 
+                    })
+
+                    //this.navigateToWebPage();    
+                    const evt = new ShowToastEvent({
+                        title: 'Success!',
+                        message: 'Accounts successfully loaded!',
+                        variant: 'success',
+                    });
+                    this.dispatchEvent(evt);
+                    this.showSpinner = false;
+
                 })
-
-                const evt = new ShowToastEvent({
-                    title: 'Success!',
-                    message: 'Accounts successfully loaded!',
-                    variant: 'success',
+                .catch(error => {
+                    console.error(error);
+                    const evt = new ShowToastEvent({
+                        title: 'ERROR!',
+                        message: error.body.message,
+                        variant: 'error',
+                    });
+                    this.dispatchEvent(evt);
+                    this.showSpinner = false;
                 });
-                this.dispatchEvent(evt);
-
-            })
-            .catch(error => {
-                console.error(error);
-                const evt = new ShowToastEvent({
-                    title: 'ERROR!',
-                    message: error.body.message,
-                    variant: 'error',
-                });
-                this.dispatchEvent(evt);
-            });
         }
     }
     //On click grabs contact
@@ -207,5 +216,15 @@ export default class AccountGrabber extends LightningElement {
     handleInputChange5(event){
 
         this.inputValue5 = event.target.value;
+    }
+
+    // Navigation to web page 
+    navigateToWebPage() {
+        this[NavigationMixin.Navigate]({
+            "type": "standard__webPage",
+            "attributes": {
+                "url": "https://sdadasd-dev-ed.develop.lightning.force.com/lightning/r/Account/001Dn00000EVajTIAT/view"
+            }
+        });
     }
 }
