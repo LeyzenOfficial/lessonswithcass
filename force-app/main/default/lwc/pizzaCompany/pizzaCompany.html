@@ -1,0 +1,95 @@
+<template>
+    <lightning-card title = Pizzaria>
+        <div class="slds-var-p-around_medium">
+<!-- First pick list -->
+
+        <template lwc:if={picklistValues}>
+            <lightning-combobox
+                name="progress"
+                label="Select the type of pizza"
+                value={pizzaType}
+                placeholder="Select type of pizza..."
+                onchange={handlePizzaTypeChange}
+                options={picklistValues} >
+            </lightning-combobox>
+
+            <template if:true={showPizzaImage}>
+                <img src={pizzaImageSource} alt="Pizza Image" />
+            </template>
+
+        </template>
+<!-- First number input -->
+            <div class="slds-p-bottom_medium">
+                <lightning-input type="number" label="Enter amount of pizzas to be made" value={numberOfPizzas} onchange={handleNumberOfPizzas}></lightning-input>
+            </div>
+<!-- First button -->
+        <div style="position: absolute; bottom: 10px; right: 10px;">
+            <lightning-button-icon icon-name="action:refresh"  variant="brand" alternative-text="Restart Order" title="Restart Order" onclick={handleRefreshOrderClick}>></lightning-button-icon>
+        </div>
+
+            <div class="slds-p-bottom_medium">
+                <lightning-button 
+                    variant="brand" 
+                    label="Order pizza(s)"
+                    title="Primary action" 
+                    disabled={disableCreateOrderButton}
+                    onclick={handleOrderPizzaButtonClick}>
+                </lightning-button>
+            </div>
+<!-- Second button -->
+            <template lwc:if={showProcessOrderButton}>
+                <div class="slds-p-bottom_medium">
+                    <lightning-button 
+                        variant="brand" 
+                        label="Process order"
+                        title="Primary action" 
+                        disabled={disableProcessOrderButton}
+                        onclick={handleProcessOrderButtonClick}>
+                    </lightning-button>
+                </div>
+            </template>
+<!-- Third Button -->
+            <template lwc:if={showDeliveryPizzaButton}>
+                <div class="slds-p-bottom_medium">
+
+                    <p>Order has been processed!</p>
+                    
+                    <lightning-button 
+                        variant="brand" 
+                        label="Deliver pizza"
+                        title="Primary action" 
+                        disabled={disableDeliverOrder}
+                        onclick={handleDeliveryPizzaButtonClick}>
+                    </lightning-button>
+                </div>
+            </template>
+<!-- Fourth Button -->
+            <template lwc:if={showPizzaIsReadyButton}>
+                <div class="slds-p-bottom_medium">
+
+                    <lightning-button 
+                        variant="brand" 
+                        label="Pizza is ready"
+                        title="Primary action" 
+                        disabled={disablePizzaIsReadyButton}
+                        onclick={handlePizzaIsReadyButtonClick}>
+                    </lightning-button>
+                </div>
+            </template>
+<!-- Fifth Button -->
+            <template lwc:if={showPlaceNewOrderButton}>
+                <div class="slds-p-bottom_medium">
+        
+                    <p>The pizza(s) have been delivered!</p>
+
+                    <lightning-button 
+                        variant="brand" 
+                        label="PLACE NEW ORDER"
+                        title="Primary action" 
+                        onclick={handleRefreshOrderClick}>
+                    </lightning-button>
+                </div>
+            </template>
+        </div>
+    </lightning-card>
+</template>
