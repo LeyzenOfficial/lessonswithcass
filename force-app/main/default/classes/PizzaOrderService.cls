@@ -30,7 +30,7 @@ public class PizzaOrderService {
     }
 
     @AuraEnabled
-    public static Pizza_Order__c updateToOrderProcessed(Pizza_Order__c pizzaOrder){
+    public static Pizza_Order__c updatePizzaOrder(Pizza_Order__c pizzaOrder){
 
         try {
 
@@ -43,40 +43,14 @@ public class PizzaOrderService {
     }
 
     @AuraEnabled
-    public static Pizza_Order__c updateToOrderDone(Pizza_Order__c pizzaOrder){
-
+    public static Pizza_Image_Links__c getPizzaTypeUrl(String pizzaType){
+             
         try {
 
-            update pizzaOrder;
-            return pizzaOrder;
+        return Pizza_Image_Links__c.getValues(pizzaType);
 
         } catch (Exception e) {
             throw new AuraHandledException(e.getMessage());
         }
     }
-
-    @AuraEnabled
-    public static Pizza_Order__c updateToOrderDelivered(Pizza_Order__c pizzaOrder){
-
-        try {
-
-            update pizzaOrder;
-            return pizzaOrder;
-
-        } catch (Exception e) {
-            throw new AuraHandledException(e.getMessage());
-        }
-    }
-
-    // @AuraEnabled(cacheable=true)
-    // public static List<PicklistOption> getDynamicPicklistValues() {
-    //     List<PicklistOption> options = new List<PicklistOption>();
-
-    //     options.add(new PicklistOption('Pepperoni Pizza', 'Pepperoni Pizza'));
-    //     options.add(new PicklistOption('Cheese Pizza', 'Cheese Pizza'));
-    //     options.add(new PicklistOption('Mushroom Pizza', 'Mushroom Pizza'));
-    //     options.add(new PicklistOption('Pineapple Pizza', 'Pineapple Pizza'));
-
-    //     return options;
-    // }
 }
