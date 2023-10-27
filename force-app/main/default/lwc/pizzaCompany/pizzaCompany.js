@@ -4,10 +4,8 @@ import { getPicklistValues, getObjectInfo } from 'lightning/uiObjectInfoApi';
 
 //Apex method imports
 import createPizzaOrder from '@salesforce/apex/PizzaOrderService.createPizzaOrder';
-import updateToOrderProcessed from '@salesforce/apex/PizzaOrderService.updateToOrderProcessed';
-import updateToOrderDone from '@salesforce/apex/PizzaOrderService.updateToOrderDone';
-import updateToOrderDelivered from '@salesforce/apex/PizzaOrderService.updateToOrderDelivered';
-import getPizzaTypeUrl from '@salesforce/apex/PizzaCompanyService.getPizzaTypeUrl';
+import updatePizzaOrder from '@salesforce/apex/PizzaOrderService.updatePizzaOrder';
+import getPizzaTypeUrl from '@salesforce/apex/PizzaOrderService.getPizzaTypeUrl';
 
 import PIZZA_ORDER_OBJECT from '@salesforce/schema/Pizza_Order__c';
 import PIZZA_TYPE_FIELD from '@salesforce/schema/Pizza_Order__c.Pizza_type__c';
@@ -86,7 +84,7 @@ export default class PizzaCompany extends LightningElement {
 
                 const evt = new ShowToastEvent({
                     title: 'Success!',
-                    message: 'Order created!',
+                    message: 'The order has been created!',
                     variant: 'success',
                 });
                 this.dispatchEvent(evt);
@@ -123,105 +121,35 @@ export default class PizzaCompany extends LightningElement {
 
         console.log(this.pizzaOrder);
 
-        updateToOrderDone({pizzaOrder : this.pizzaOrder})
-            .then(result => {
-                
-                this.pizzaOrder = result;
-
-                console.log(this.pizzaOrder);
-
-                const evt = new ShowToastEvent({
-                    title: 'Success!',
-                    message: 'Order processed!',
-                    variant: 'success',
-                });
-                this.dispatchEvent(evt);
-
-            })
-            .catch(error => {
-                console.error(error);
-                const evt = new ShowToastEvent({
-                    title: 'ERROR!',
-                    message: error.body.message,
-                    variant: 'error',
-                });
-                this.dispatchEvent(evt);
-            });
+        this.updatePizza('The order has been processed!');
         
-
-        this.showDeliveryPizzaButton = true;
+        this.showPizzaIsReadyButton = true;
         this.disableProcessOrderButton = true;
 
     }
     //Deliver order button
-    handleDeliveryPizzaButtonClick(){
+    handlePizzaIsReadyButtonClick(){
 
         this.pizzaOrder.Status__c = DONE_STATUS;
 
         console.log(this.pizzaOrder);
 
-        updateToOrderProcessed({pizzaOrder : this.pizzaOrder})
-            .then(result => {
-                
-                this.pizzaOrder = result;
+        this.updatePizza('The pizza is ready!');
 
-                console.log(this.pizzaOrder);
-
-                const evt = new ShowToastEvent({
-                    title: 'Success!',
-                    message: 'Order done!',
-                    variant: 'success',
-                });
-                this.dispatchEvent(evt);
-
-            })
-            .catch(error => {
-                console.error(error);
-                const evt = new ShowToastEvent({
-                    title: 'ERROR!',
-                    message: error.body.message,
-                    variant: 'error',
-                });
-                this.dispatchEvent(evt);
-            });
-
-        this.showPizzaIsReadyButton = true;
-        this.disableDeliverOrder = true;
+        this.showDeliveryPizzaButton = true;
+        this.disablePizzaIsReadyButton = true;
 
     }
-    handlePizzaIsReadyButtonClick(){
+    handleDeliveryPizzaButtonClick(){
 
         this.pizzaOrder.Status__c = DELIVERED_STATUS;
 
         console.log(this.pizzaOrder);
 
-        updateToOrderDelivered({pizzaOrder : this.pizzaOrder})
-            .then(result => {
-                
-                this.pizzaOrder = result;
-
-                console.log(this.pizzaOrder);
-
-                const evt = new ShowToastEvent({
-                    title: 'Success!',
-                    message: 'Order Delivered!',
-                    variant: 'success',
-                });
-                this.dispatchEvent(evt);
-
-            })
-            .catch(error => {
-                console.error(error);
-                const evt = new ShowToastEvent({
-                    title: 'ERROR!',
-                    message: error.body.message,
-                    variant: 'error',
-                });
-                this.dispatchEvent(evt);
-            });
+        this.updatePizza('The pizza has been delivered!');
 
         this.showPlaceNewOrderButton = true;
-        this.disablePizzaIsReadyButton = true;
+        this.disableDeliverOrder = true;
 
     }
     //Restart the LWC
@@ -283,5 +211,33 @@ export default class PizzaCompany extends LightningElement {
 
         this.numberOfPizzas = event.detail.value; 
 
+    }
+
+    updatePizza(message){
+
+        updatePizzaOrder({pizzaOrder : this.pizzaOrder})
+            .then(result => {
+                
+                this.pizzaOrder = result;
+
+                console.log(this.pizzaOrder);
+
+                const evt = new ShowToastEvent({
+                    title: 'Success!',
+                    message: message,
+                    variant: 'success',
+                });
+                this.dispatchEvent(evt);
+
+            })
+            .catch(error => {
+                console.error(error);
+                const evt = new ShowToastEvent({
+                    title: 'ERROR!',
+                    message: error.body.message,
+                    variant: 'error',
+                });
+                this.dispatchEvent(evt);
+            });
     }
 }

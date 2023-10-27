@@ -49,6 +49,19 @@
                 </div>
             </template>
 <!-- Third Button -->
+            <template lwc:if={showPizzaIsReadyButton}>
+                <div class="slds-p-bottom_medium">
+
+                    <lightning-button 
+                        variant="brand" 
+                        label="Pizza is ready"
+                        title="Primary action" 
+                        disabled={disablePizzaIsReadyButton}
+                        onclick={handlePizzaIsReadyButtonClick}>
+                    </lightning-button>
+                </div>
+            </template>
+<!-- Fourth Button -->
             <template lwc:if={showDeliveryPizzaButton}>
                 <div class="slds-p-bottom_medium">
 
@@ -60,19 +73,6 @@
                         title="Primary action" 
                         disabled={disableDeliverOrder}
                         onclick={handleDeliveryPizzaButtonClick}>
-                    </lightning-button>
-                </div>
-            </template>
-<!-- Fourth Button -->
-            <template lwc:if={showPizzaIsReadyButton}>
-                <div class="slds-p-bottom_medium">
-
-                    <lightning-button 
-                        variant="brand" 
-                        label="Pizza is ready"
-                        title="Primary action" 
-                        disabled={disablePizzaIsReadyButton}
-                        onclick={handlePizzaIsReadyButtonClick}>
                     </lightning-button>
                 </div>
             </template>
