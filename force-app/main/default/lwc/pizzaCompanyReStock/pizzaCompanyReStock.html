@@ -1,0 +1,30 @@
+<template>
+    <lightning-card title = Re-stock>
+        <div class="slds-var-p-around_medium">
+<!-- First pick list -->
+
+            <lightning-combobox
+                name="progress"
+                label="Select the type of ingredient"
+                value={ingredientType}
+                placeholder="Select type of ingredient"
+                onchange={handleingredientTypeChange}
+                options={picklistValues} >
+            </lightning-combobox>
+
+            <!-- First number input -->
+            <div class="slds-p-bottom_medium">
+                <lightning-input type="number" label="Enter amount of ingredients to be restocked" value={numberOfIngredients} onchange={handleNumberOfIngredientsChange}></lightning-input>
+            </div>
+
+            <div class="slds-p-bottom_medium">
+                <lightning-button 
+                    variant="brand" 
+                    label="Re-stock ingredients"
+                    title="Primary action" 
+                    onclick={handleRestockIngredientsButtonClick}>
+                </lightning-button>
+            </div>
+        </div>
+    </lightning-card>
+</template>
