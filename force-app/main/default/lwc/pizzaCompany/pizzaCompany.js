@@ -6,6 +6,7 @@ import { getPicklistValues, getObjectInfo } from 'lightning/uiObjectInfoApi';
 import createPizzaOrder from '@salesforce/apex/PizzaOrderService.createPizzaOrder';
 import updatePizzaOrder from '@salesforce/apex/PizzaOrderService.updatePizzaOrder';
 import getPizzaTypeUrl from '@salesforce/apex/PizzaOrderService.getPizzaTypeUrl';
+import updatePizzaStock from '@salesforce/apex/PizzaOrderService.updatePizzaStock';
 
 import PIZZA_ORDER_OBJECT from '@salesforce/schema/Pizza_Order__c';
 import PIZZA_TYPE_FIELD from '@salesforce/schema/Pizza_Order__c.Pizza_type__c';
@@ -75,31 +76,9 @@ export default class PizzaCompany extends LightningElement {
 
         if(this.numberOfPizzas && this.pizzaType != null){
 
-            createPizzaOrder({pizzaType : this.pizzaType, amount : this.numberOfPizzas, status : ORDERED_STATUS})
-            .then(result => {
-                
-                this.pizzaOrder = result;
+            this.updateIngredientStock();
 
-                console.log(this.pizzaOrder);
-
-                const evt = new ShowToastEvent({
-                    title: 'Success!',
-                    message: 'The order has been created!',
-                    variant: 'success',
-                });
-                this.dispatchEvent(evt);
-
-            })
-            .catch(error => {
-                console.error(error);
-                const evt = new ShowToastEvent({
-                    title: 'ERROR!',
-                    message: error.body.message,
-                    variant: 'error',
-                });
-                this.dispatchEvent(evt);
-            });
-
+            this.insertPizzaOrder();
 
             this.showProcessOrderButton = true;
             this.disableCreateOrderButton = true;
@@ -239,5 +218,53 @@ export default class PizzaCompany extends LightningElement {
                 });
                 this.dispatchEvent(evt);
             });
+    }
+
+    updateIngredientStock(){
+
+        updatePizzaStock({ pizzaType: this.pizzaType, numberOfPizzas: this.numberOfPizzas})
+            .then(result => {
+
+                console.log('Stock updated');
+
+            })
+            .catch(error => {
+                console.error(error);
+                const evt = new ShowToastEvent({
+                    title: 'ERROR!',
+                    message: error.body.message,
+                    variant: 'error',
+                });
+                this.dispatchEvent(evt);
+            });
+
+    }
+    insertPizzaOrder(){
+
+        createPizzaOrder({pizzaType : this.pizzaType, amount : this.numberOfPizzas, status : ORDERED_STATUS})
+            .then(result => {
+                
+                this.pizzaOrder = result;
+
+                console.log(this.pizzaOrder);
+
+                const evt = new ShowToastEvent({
+                    title: 'Success!',
+                    message: 'The order has been created!',
+                    variant: 'success',
+                });
+                this.dispatchEvent(evt);
+
+            })
+            .catch(error => {
+                console.error(error);
+                const evt = new ShowToastEvent({
+                    title: 'ERROR!',
+                    message: error.body.message,
+                    variant: 'error',
+                });
+                this.dispatchEvent(evt);
+            });
+
     }
 }

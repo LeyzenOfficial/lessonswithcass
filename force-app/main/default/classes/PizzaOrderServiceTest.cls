@@ -42,4 +42,79 @@ private class PizzaOrderServiceTest {
         system.assertEquals('Cheese Pizza', pizzaType.Name, 'Pizza name should be Cheese Pizza');
 
     }
+    @isTest
+    static void updatePizzaStockTest() {
+
+        List<Pizza_Ingredient__c> pizzaIngredients = new List<Pizza_Ingredient__c>();
+        pizzaIngredients.add(new Pizza_Ingredient__c(Name = 'Dough', Stock__c = 100));
+        pizzaIngredients.add(new Pizza_Ingredient__c(Name = 'Cheese', Stock__c = 100));
+        pizzaIngredients.add(new Pizza_Ingredient__c(Name = 'Pepperoni', Stock__c = 100));
+        pizzaIngredients.add(new Pizza_Ingredient__c(Name = 'Bacon', Stock__c = 100));
+        pizzaIngredients.add(new Pizza_Ingredient__c(Name = 'Mushroom', Stock__c = 100));
+        pizzaIngredients.add(new Pizza_Ingredient__c(Name = 'Pineapple', Stock__c = 100));
+
+        insert pizzaIngredients;
+
+
+        PizzaOrderService.updatePizzaStock('Pepperoni Pizza', 1);
+        PizzaOrderService.updatePizzaStock('Cheese Pizza', 1);
+        PizzaOrderService.updatePizzaStock('Mushroom Pizza', 1);
+        PizzaOrderService.updatePizzaStock('Pineapple Pizza', 1);
+        PizzaOrderService.updatePizzaStock('Bacon Bomber Pizza', 1);
+
+
+        List<Pizza_Ingredient__c> updatedPizzaIngredients = [ SELECT Id, Name, Stock__c FROM Pizza_Ingredient__c];
+
+
+        System.assertEquals(95, updatedPizzaIngredients[0].Stock__c, 'Dough stock should be updated');
+        System.assertEquals(87, updatedPizzaIngredients[1].Stock__c, 'Cheese stock should be updated');
+        System.assertEquals(90, updatedPizzaIngredients[2].Stock__c, 'Pepperoni stock should be updated');
+
+        System.assertEquals(88, updatedPizzaIngredients[3].Stock__c, 'Bacon stock should be updated');
+        System.assertEquals(90, updatedPizzaIngredients[4].Stock__c, 'Mushroom stock should be updated');
+        System.assertEquals(92, updatedPizzaIngredients[5].Stock__c, 'Pineapple stock should be updated');
+    }
+
+    @isTest
+    private static void updateReStockTest() {
+
+        Pizza_Ingredient__c testIngredient = new Pizza_Ingredient__c();
+
+        testIngredient.Name = 'Pepperoni';
+        testIngredient.Stock__c = 10;
+
+        insert testIngredient;
+
+
+        Test.startTest();
+        PizzaOrderService.updateReStock('Pepperoni', 5);
+        Test.stopTest();
+
+
+        Pizza_Ingredient__c updatedIngredient = [SELECT Id, Stock__c FROM Pizza_Ingredient__c WHERE Id = :testIngredient.Id];
+        
+        System.assertEquals(15, updatedIngredient.Stock__c, 'Stock__c should be updated to 15');
+    }
+
+    @isTest
+    static void testCheckLowStock() {
+
+
+        Pizza_Ingredient__c ingredient = new Pizza_Ingredient__c(Name='Pepperoni ' , Stock__c=50);
+
+        insert ingredient;
+
+        ingredient.Stock__c = 5;
+
+        Test.startTest();
+
+        update ingredient;
+
+        Integer invocations = Limits.getEmailInvocations();
+        
+        Test.stopTest();
+
+
+        system.assertEquals(1, invocations, 'Only one email should be sent!');
+    }
 }
