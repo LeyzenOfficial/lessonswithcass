@@ -182,4 +182,42 @@ public class PizzaOrderService {
 
     }
 
+    public static void createPizzaOrderNotification(List<Pizza_Order__c> newOrders) {
+
+        Set<String> recipientsIds = new Set<String>();
+    
+        // Step 1: Retrieve the Id of the specific public group
+        Group publicGroup = [SELECT Id FROM Group WHERE DeveloperName = 'Pizza_Makers'];
+    
+        // Step 2: Add the Ids of all users in the public group to recipientsIds
+        List<GroupMember> groupMembers = [SELECT UserOrGroupId FROM GroupMember WHERE GroupId = :publicGroup.Id];
+        for (GroupMember member : groupMembers) {
+            recipientsIds.add(member.UserOrGroupId);
+        }
+    
+        // Get the Id for our custom notification type
+        CustomNotificationType notificationType =
+        [SELECT Id, DeveloperName 
+            FROM CustomNotificationType 
+            WHERE DeveloperName='Notificationtest'];
+
+        for (Pizza_Order__c order : newOrders) {
+
+            // Create a new custom notification
+            Messaging.CustomNotification notification = new Messaging.CustomNotification();
+    
+            // Set the contents for the notification
+            notification.setTitle('New pizza order!');
+            notification.setBody('A new pizza has been ordered!');
+    
+            // Step 3: Set the notification type and target to the public group Id
+            notification.setNotificationTypeId(notificationType.Id);
+            notification.setTargetId(order.Id);
+    
+            // Actually send the notification
+
+            notification.send(recipientsIds);
+
+        }
+    }
 }
