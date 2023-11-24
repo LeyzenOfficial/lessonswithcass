@@ -43,7 +43,7 @@ private class PizzaOrderServiceTest {
 
     }
     @isTest
-    static void updatePizzaStockTest() {
+    private static void updatePizzaStockTest() {
 
         List<Pizza_Ingredient__c> pizzaIngredients = new List<Pizza_Ingredient__c>();
         pizzaIngredients.add(new Pizza_Ingredient__c(Name = 'Dough', Stock__c = 100));
@@ -97,7 +97,7 @@ private class PizzaOrderServiceTest {
     }
 
     @isTest
-    static void testCheckLowStock() {
+    private static void testCheckLowStock() {
 
 
         Pizza_Ingredient__c ingredient = new Pizza_Ingredient__c(Name='Pepperoni ' , Stock__c=50);
@@ -116,5 +116,48 @@ private class PizzaOrderServiceTest {
 
 
         system.assertEquals(1, invocations, 'Only one email should be sent!');
+    }
+
+    @isTest
+    private static void CreatePizzaOrderNotificationTest() {
+
+        User myUser = [SELECT Id FROM User WHERE Id = :UserInfo.getUserId()];
+
+        Group pizzaGroup = [SELECT Id FROM Group WHERE DeveloperName = 'Pizza_Makers'];
+
+        System.runAs(myUser) {
+
+            // Create a test user
+            User testUser = new User(
+                FirstName = 'Test',
+                LastName = 'User',
+                Alias = 'tuser',
+                Email = 'leyley123@example.com',
+                UserName = 'leyzenofficial@example.com',
+                ProfileId = [SELECT Id FROM Profile WHERE Name = 'Standard User' LIMIT 1].Id,
+                EmailEncodingKey = 'UTF-8',
+                LanguageLocaleKey = 'en_US',
+                LocaleSidKey = 'en_US',
+                TimeZoneSidKey = 'America/New_York'
+            );
+            insert testUser;
+
+            GroupMember groupMember = new GroupMember(
+                GroupId = pizzaGroup.Id,
+                UserOrGroupId = testUser.Id
+            );
+            insert groupMember;
+        }
+
+        // Create a test Pizza_Order__c record
+        Pizza_Order__c testOrder = new Pizza_Order__c();
+
+        testOrder.Pizza_type__c = 'Pepperoni Pizza';
+        testOrder.Status__c = 'Ordered';
+        testOrder.Amount__c = 1;
+
+        Test.startTest();
+        insert testOrder;
+        Test.stopTest();
     }
 }
