@@ -22,6 +22,41 @@
             <div class="slds-p-bottom_medium">
                 <lightning-input type="number" label="Enter amount of pizzas to be made" value={numberOfPizzas} onchange={handleNumberOfPizzas}></lightning-input>
             </div>
+<!-- CPF number input -->
+            <template if:true={showCpf}>
+
+                <div class="slds-p-bottom_medium">
+                    <lightning-input type="text" label="Enter customers CPF" value={customerCPF} onchange={handleCustomerCpf}></lightning-input>
+                </div>
+    
+                </template>
+<!-- New customer fields if customer = null -->
+                <template if:true={customerIsNull}>
+
+                    <div class="slds-p-bottom_medium">
+                        <lightning-input type="text" label="Enter new customer name" value={newCustomerName} onchange={handleNewCustomerName}></lightning-input>
+                    </div>
+
+                    <div class="slds-p-bottom_medium">
+                        <lightning-input type="text" label="Enter customer CPF" value={newCustomerCPF} onchange={handleNewCustomerCpf}></lightning-input>
+                    </div>
+
+                    <div class="slds-p-bottom_medium">
+                        <lightning-input type="text" label="Enter customer phone number" value={newCustomerPhone} onchange={handleNewCustomerPhone}></lightning-input>
+                    </div>
+        
+                    <div class="slds-p-bottom_medium">
+                        <lightning-button 
+                            variant="brand" 
+                            label="Create new customer"
+                            title="Primary action" 
+                            disabled={disableNewCustomerInsert}
+                            onclick={handleNewCustomerInsert}>
+                        </lightning-button>
+                    </div>
+
+                </template>
+
 <!-- First button -->
         <div style="position: absolute; bottom: 10px; right: 10px;">
             <lightning-button-icon icon-name="action:refresh"  variant="brand" alternative-text="Restart Order" title="Restart Order" onclick={handleRefreshOrderClick}>></lightning-button-icon>
