@@ -7,6 +7,8 @@ import createPizzaOrder from '@salesforce/apex/PizzaOrderService.createPizzaOrde
 import updatePizzaOrder from '@salesforce/apex/PizzaOrderService.updatePizzaOrder';
 import getPizzaTypeUrl from '@salesforce/apex/PizzaOrderService.getPizzaTypeUrl';
 import updatePizzaStock from '@salesforce/apex/PizzaOrderService.updatePizzaStock';
+import doesCpfExist from '@salesforce/apex/PizzaOrderService.doesCustomerCPFExist';
+import insertNewCustomer from '@salesforce/apex/PizzaOrderService.insertNewCustomer';
 
 import PIZZA_ORDER_OBJECT from '@salesforce/schema/Pizza_Order__c';
 import PIZZA_TYPE_FIELD from '@salesforce/schema/Pizza_Order__c.Pizza_type__c';
@@ -35,6 +37,7 @@ export default class PizzaCompany extends LightningElement {
     disableProcessOrderButton = false;
     disableDeliverOrder = false;
     disablePizzaIsReadyButton = false;
+    disableNewCustomerInsert = false;
 
 
     //Is order processed?
@@ -46,6 +49,15 @@ export default class PizzaCompany extends LightningElement {
 
     //HandleValues
     numberOfPizzas;
+    customerCPF;
+    customer;
+    customerIsNull = false;
+
+    NewCustomerName;
+    NewCustomerCpf;
+    NewCustomerPhone;
+
+    showCpf = false;
 
     //Pizza order return
     pizzaOrder;
@@ -71,17 +83,76 @@ export default class PizzaCompany extends LightningElement {
     objectInfo;
 
 
+    handleNewCustomerInsert(){
+
+        insertNewCustomer({NewCustomerCpf : this.NewCustomerCpf, NewCustomerName : this.NewCustomerName, NewCustomerPhone : this.NewCustomerPhone})
+            .then(result => {
+        
+                this.dispatchEvent(new ShowToastEvent({
+                    title: 'Success!',
+                    message: 'New customer has been created!',
+                    variant: 'success'
+                }));
+            })
+            .catch(error => {
+
+                this.dispatchEvent(new ShowToastEvent({
+                    title: 'Error',
+                    message: error.body.message,
+                    variant: 'error'
+                }));
+            });
+    }
+
     //Create order button
     handleOrderPizzaButtonClick(){
 
+        console.log('inside button worked');
+
         if(this.numberOfPizzas && this.pizzaType != null){
 
-            this.updateIngredientStock();
+            if(this.NewCustomerCpf){
+                this.customerCPF = this.NewCustomerCpf;
+            }
 
-            this.insertPizzaOrder();
+            //Checking if the cpf exists
+            doesCpfExist({cpf : this.customerCPF})
+            .then(result => {
 
-            this.showProcessOrderButton = true;
-            this.disableCreateOrderButton = true;
+                this.customer = result;
+
+                if(this.customer == null){
+
+                    this.disableCreateOrderButton = false;
+                    this.customerIsNull = true;
+
+                    return;
+                }
+
+                this.updateIngredientStock();
+                this.insertPizzaOrder();
+                
+                this.showProcessOrderButton = true;
+                this.disableCreateOrderButton = true;
+                this.disableNewCustomerInsert = true;
+
+                this.dispatchEvent(new ShowToastEvent({
+                    title: 'Success!',
+                    message: 'Customer found!',
+                    variant: 'success'
+                }));
+            })
+            .catch(error => {
+
+                this.dispatchEvent(new ShowToastEvent({
+                    title: 'Error',
+                    message: error.body.message,
+                    variant: 'error'
+                }));
+            });
+            //Checking if the cpf exist
+
+            
 
         } else {
                 const evt = new ShowToastEvent({
@@ -129,6 +200,7 @@ export default class PizzaCompany extends LightningElement {
 
         this.showPlaceNewOrderButton = true;
         this.disableDeliverOrder = true;
+        this.customerIsNull = false;
 
     }
     //Restart the LWC
@@ -143,8 +215,10 @@ export default class PizzaCompany extends LightningElement {
         this.disableProcessOrderButton = false;
         this.disableDeliverOrder = false;
         this.disablePizzaIsReadyButton = false;
+        this.customerIsNull = false;
 
         this.showPizzaImage = false;
+        this.showCpf = false;
 
         this.pizzaType = null;
         this.numberOfPizzas = null;
@@ -161,6 +235,10 @@ export default class PizzaCompany extends LightningElement {
 
                     this.pizzaImageSource = result.Pizza_Image_URL__c;
                     this.showPizzaImage = true;
+
+                    ////////
+                    this.showCpf = true;
+                    ////////
 
                     console.log(this.pizzaImageSource);
 
@@ -190,6 +268,27 @@ export default class PizzaCompany extends LightningElement {
 
         this.numberOfPizzas = event.detail.value; 
 
+    }
+
+    handleCustomerCpf(event){
+
+        this.customerCPF = event.detail.value; 
+
+    }
+
+    handleNewCustomerName(event){
+
+        this.NewCustomerName = event.detail.value;
+    }
+
+    handleNewCustomerCpf(event){
+
+        this.NewCustomerCpf = event.detail.value;
+    }
+
+    handleNewCustomerPhone(event){
+
+        this.NewCustomerPhone = event.detail.value;
     }
 
     updatePizza(message){
@@ -241,7 +340,7 @@ export default class PizzaCompany extends LightningElement {
     }
     insertPizzaOrder(){
 
-        createPizzaOrder({pizzaType : this.pizzaType, amount : this.numberOfPizzas, status : ORDERED_STATUS})
+        createPizzaOrder({pizzaType : this.pizzaType, amount : this.numberOfPizzas, status : ORDERED_STATUS, customer : this.customer})
             .then(result => {
                 
                 this.pizzaOrder = result;

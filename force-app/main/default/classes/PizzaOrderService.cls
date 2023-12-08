@@ -11,7 +11,7 @@ public class PizzaOrderService {
     // }
 
     @AuraEnabled
-    public static Pizza_Order__c createPizzaOrder(String pizzaType, Integer amount, String status) {
+    public static Pizza_Order__c createPizzaOrder(String pizzaType, Integer amount, String status, Account customer) {
 
         try {
             
@@ -20,6 +20,7 @@ public class PizzaOrderService {
             pizzaOrder.Pizza_type__c = pizzaType;
             pizzaOrder.Amount__c = amount;
             pizzaOrder.Status__c = status;
+            pizzaOrder.Customer__c = customer.Id;
 
             insert pizzaOrder;
             return pizzaOrder;
@@ -219,5 +220,52 @@ public class PizzaOrderService {
             notification.send(recipientsIds);
 
         }
+    }
+    @AuraEnabled
+    public static Pizza_Order__c trackOrderNumber(String orderNumber){
+
+        try {
+
+            Pizza_Order__c order = [SELECT Id, Name, Status__c, Pizza_type__c, Amount__c FROM Pizza_Order__c WHERE Name = :orderNumber];
+
+            return order;
+
+        } catch (Exception e) {
+            throw new PizzaOrderServiceException(e.getMessage());
+        }
+
+    }
+
+    public class PizzaOrderServiceException extends Exception {
+
+    }
+    @AuraEnabled
+    public static Account doesCustomerCPFExist(String cpf){
+
+        try {
+
+            List<Account> accounts = [SELECT Id, Name, CPF__c FROM Account WHERE CPF__c = :cpf];
+
+            if(accounts.isEmpty()){
+                return null;
+            }
+
+            return accounts[0];
+
+        } catch (Exception e) {
+            throw new AuraHandledException(e.getMessage());
+        }
+    }
+
+    @AuraEnabled
+    public static void insertNewCustomer(String NewCustomerCpf, String NewCustomerName, String NewCustomerPhone){
+
+        Account acc = new Account();
+
+        acc.CPF__c = NewCustomerCpf;
+        acc.Name = NewCustomerName;
+        acc.Phone = NewCustomerPhone;
+
+        insert acc;
     }
 }

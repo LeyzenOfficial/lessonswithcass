@@ -4,8 +4,17 @@ private class PizzaOrderServiceTest {
     @istest
     private static void createPizzaOrderTest(){
 
+        // Test data setup
+        Account testCustomer = new Account();
+        
+        testCustomer.CPF__c = '23456789123';
+        testCustomer.Name = 'MatheusOrsi';
+        testCustomer.Phone = '5614829946';
+        insert testCustomer;
 
-        PizzaOrderService.createPizzaOrder('Pepperoni Pizza', 2, 'Ordered');
+        Test.startTest();
+        PizzaOrderService.createPizzaOrder('Pepperoni Pizza', 2, 'Ordered', testCustomer);
+        Test.stopTest();
 
 
         Pizza_Order__c createdPizzaOrder = [SELECT Id, Pizza_type__c, Amount__c, Status__c FROM Pizza_Order__c ];
@@ -18,7 +27,15 @@ private class PizzaOrderServiceTest {
     @istest
     private static void updatePizzaOrderTest(){
 
-        Pizza_Order__c createdPizza = PizzaOrderService.createPizzaOrder('Pepperoni Pizza', 2, 'Ordered');
+        // Test data setup
+        Account testCustomer = new Account();
+
+        testCustomer.CPF__c = '23456789123';
+        testCustomer.Name = 'MatheusOrsi';
+        testCustomer.Phone = '5614829946';
+        insert testCustomer;
+
+        Pizza_Order__c createdPizza = PizzaOrderService.createPizzaOrder('Pepperoni Pizza', 2, 'Ordered', testCustomer);
 
         createdPizza.Status__c = 'In Process';
 
@@ -159,5 +176,60 @@ private class PizzaOrderServiceTest {
         Test.startTest();
         insert testOrder;
         Test.stopTest();
+     }
+
+     @isTest
+     private static void trackOrderNumberTest(){
+
+        // Create a test Pizza Order record
+        Pizza_Order__c testOrder = new Pizza_Order__c(
+            Status__c = 'Ordered',
+            Pizza_type__c = 'Pepperoni Pizza',
+            Amount__c = 3
+        );
+        insert testOrder;
+
+        Pizza_Order__c order = [SELECT Id, Name FROM Pizza_Order__c];
+
+        // Call the method being tested
+        Test.startTest();
+        Pizza_Order__c pizzaOrder = PizzaOrderService.trackOrderNumber(order.Name);
+        Test.stopTest();
+
+        Assert.areEqual(order.Name, pizzaOrder.Name, 'Order name must match!');
+
+     }
+
+    @isTest
+    static void DoesCustomerCPFExistTest() {
+
+        
+        String testCPF = '12345678901';
+        Account testAccount = new Account(Name = 'Test Customer', CPF__c = testCPF);
+        insert testAccount;
+
+        
+        Test.startTest();
+        Account existingCustomer = PizzaOrderService.doesCustomerCPFExist(testCPF);
+        Test.stopTest();
+
+        
+        System.assertNotEquals(null, existingCustomer, 'Customer not found, but it should exist');
+        System.assertEquals(testAccount.Id, existingCustomer.Id, 'Incorrect customer found');
+
+    }
+
+    @isTest
+    static void InsertNewCustomerTest() {
+
+        Test.startTest();
+        PizzaOrderService.insertNewCustomer('12345678912', 'MattOrsi', '5614829946');
+        Test.stopTest();
+
+        Account newInsertedAccounts = [SELECT Id, CPF__c, Name, Phone FROM Account ];
+
+        Assert.areEqual('12345678912', newInsertedAccounts.CPF__c, 'CPF must match!');
+        Assert.areEqual('MattOrsi', newInsertedAccounts.Name, 'Name must match!');
+        Assert.areEqual('5614829946', newInsertedAccounts.Phone, 'Phone must match!');
     }
 }

@@ -1,0 +1,33 @@
+<template>
+    
+    <lightning-card title = Tracking>
+        <div class="slds-var-p-around_medium">
+
+            <!-- First number input -->
+            <div class="slds-p-bottom_medium">
+                <lightning-input type="number" label="Enter the order number" onchange={handleOrderNumber}></lightning-input>
+            </div>
+
+            <!-- First button -->
+            <div class="slds-p-bottom_medium">
+                <lightning-button 
+                    variant="brand" 
+                    label="Track order(s)"
+                    title="Primary action" 
+                    onclick={handleTrackOrderButtonClick}>
+                </lightning-button>
+            </div>
+
+            <template lwc:if={orders}>
+                <div class="slds-var-p-around_medium">
+
+                    <lightning-datatable
+                            key-field="id"
+                            data={orders}
+                            columns={columns}>
+                    </lightning-datatable>
+                </div>
+            </template>
+        </div>
+    </lightning-card>
+</template>
