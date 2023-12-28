@@ -53,9 +53,9 @@ export default class PizzaCompany extends LightningElement {
     customer;
     customerIsNull = false;
 
-    NewCustomerName;
-    NewCustomerCpf;
-    NewCustomerPhone;
+    newCustomerName;
+    newCustomerCpf;
+    newCustomerPhone;
 
     showCpf = false;
 
@@ -85,8 +85,10 @@ export default class PizzaCompany extends LightningElement {
 
     handleNewCustomerInsert(){
 
-        insertNewCustomer({NewCustomerCpf : this.NewCustomerCpf, NewCustomerName : this.NewCustomerName, NewCustomerPhone : this.NewCustomerPhone})
+        insertNewCustomer({newCustomerCpf : this.newCustomerCpf, newCustomerName : this.newCustomerName, newCustomerPhone : this.newCustomerPhone})
             .then(result => {
+
+                this.customerIsNull = false;
         
                 this.dispatchEvent(new ShowToastEvent({
                     title: 'Success!',
@@ -96,9 +98,17 @@ export default class PizzaCompany extends LightningElement {
             })
             .catch(error => {
 
+                //error.body.message custom variable
+                let errorMessage = error.body.message;
+
+                if(errorMessage.includes('Invalid CPF')){
+                    errorMessage = 'Invalid CPF!';
+                }
+
+
                 this.dispatchEvent(new ShowToastEvent({
                     title: 'Error',
-                    message: error.body.message,
+                    message: errorMessage,
                     variant: 'error'
                 }));
             });
@@ -278,17 +288,17 @@ export default class PizzaCompany extends LightningElement {
 
     handleNewCustomerName(event){
 
-        this.NewCustomerName = event.detail.value;
+        this.newCustomerName = event.detail.value;
     }
 
     handleNewCustomerCpf(event){
 
-        this.NewCustomerCpf = event.detail.value;
+        this.newCustomerCpf = event.detail.value;
     }
 
     handleNewCustomerPhone(event){
 
-        this.NewCustomerPhone = event.detail.value;
+        this.newCustomerPhone = event.detail.value;
     }
 
     updatePizza(message){
@@ -365,5 +375,15 @@ export default class PizzaCompany extends LightningElement {
                 this.dispatchEvent(evt);
             });
 
+    }
+
+    handleCloseModalClick(){
+
+        this.customerIsNull = false;
+        
+    }
+
+    get cpf(){
+        return this.customerCPF;
     }
 }

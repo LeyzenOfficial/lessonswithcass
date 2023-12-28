@@ -231,13 +231,8 @@ public class PizzaOrderService {
             return order;
 
         } catch (Exception e) {
-            throw new PizzaOrderServiceException(e.getMessage());
+            throw new PizzaOrderServiceException(e.getMessage()+ ' ' + e.getStackTraceString());
         }
-
-    }
-
-    public class PizzaOrderServiceException extends Exception {
-
     }
     @AuraEnabled
     public static Account doesCustomerCPFExist(String cpf){
@@ -258,14 +253,22 @@ public class PizzaOrderService {
     }
 
     @AuraEnabled
-    public static void insertNewCustomer(String NewCustomerCpf, String NewCustomerName, String NewCustomerPhone){
+    public static void insertNewCustomer(String newCustomerCpf, String newCustomerName, String newCustomerPhone){
 
-        Account acc = new Account();
+        try{
 
-        acc.CPF__c = NewCustomerCpf;
-        acc.Name = NewCustomerName;
-        acc.Phone = NewCustomerPhone;
+            Account acc = new Account();
 
-        insert acc;
+            acc.CPF__c = NewCustomerCpf;
+            acc.Name = NewCustomerName;
+            acc.Phone = NewCustomerPhone;
+
+            insert acc;
+
+        } catch (Exception e) {
+            throw new PizzaOrderServiceException(e.getMessage()+ ' ' + e.getStackTraceString());
+        }
     }
+
+    public class PizzaOrderServiceException extends Exception {}
 }
